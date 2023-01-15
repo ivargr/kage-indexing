@@ -24,15 +24,6 @@ rule convert_reference_to_numeric:
     shell:
         "sed 's/chr//g' {input} > {output.ref} && samtools faidx {output.ref}"
 
-"""
-rule index_fasta:
-    input:
-        "data/{ref}.fa"
-    output:
-        "data/{ref}.fa.fai"
-    shell:
-        "samtools faidx -o {output} {input}"
-"""
 
 rule remove_scaffolds_from_reference:
     input:

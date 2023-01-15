@@ -28,45 +28,10 @@ def get_n_variants(wildcards):
 def get_dataset_skipped_individuals_comma_separated(wildcards):
     return config["analysis_regions"]["svdataset" + wildcards.number]["skip_individuals"].replace(" ", ",")
 
-rule download_sv_vcf:
-    output:
-        vcf="data/sv-variants.vcf.gz",
-        index="data/sv-variants.vcf.gz.tbi"
-    shell:
-        "wget -O {output.vcf} {config[sv_vcf]} && wget -O {output.index} {config[sv_vcf]}.tbi "
-
-
-rule download_vcf:
-    output:
-        vcf="data/variants.vcf.gz",
-        index="data/variants.vcf.gz.tbi"
-
-    shell:
-        "wget -O {output.vcf} {config[thousand_genomes_vcf]} && wget -O {output.index} {config[thousand_genomes_vcf]}.tbi "
-
-
-rule prepare_simulated_dataset_vcf:
-    input:
-        ref="data/simulated_dataset{number,\d+}/ref.fa",
-        ref_index="data/simulated_dataset{number,\d+}/ref.fa.fai"
-    output:
-        vcf="data/simulated_dataset{number,\d+}/variants.vcf",
-        vcf_gz="data/simulated_dataset{number,\d+}/variants.vcf.gz",
-        individual_vcf="data/simulated_dataset{number}/truth_seed1.vcf",
-        individual_vcf_gz="data/simulated_dataset{number}/truth_seed1.vcf.gz",
-    params:
-        n_individuals=get_n_individuals,
-        n_variants=get_n_variants
-    conda: "envs/graph_read_simulator.yml"
-    shell:
-        "graph_read_simulator simulate_population_vcf -r {input.ref} -n {params.n_variants} -i {params.n_individuals} -o {output.vcf} -I {output.individual_vcf} && "
-        "bgzip -c -f {output.vcf} > {output.vcf_gz} && tabix -f -p vcf {output.vcf_gz} && "
-        "bgzip -c -f {output.individual_vcf} > {output.individual_vcf_gz} && tabix -f -p vcf {output.individual_vcf_gz} "
-
 
 rule prepare_dataset_vcf:
     input:
-        vcf="data/variants.vcf.gz"
+        vcf=config["variants_file"]
     output:
         "data/dataset{number,\d+}/variants.vcf.gz"
     params:
@@ -77,49 +42,9 @@ rule prepare_dataset_vcf:
         "bcftools view --regions {params.regions} {input.vcf} {params.only_snps_command} | python3 scripts/filter_variants_with_n.py | bgzip -c > {output} && tabix -f -p vcf {output} "
 
 
-# version of the above rule for dataset2 to save some time
-# don't need to use bcftools view which is slow (since we are on whole genome)
-ruleorder:
-    prepare_dataset_vcf_dataset2 > prepare_dataset_vcf
-
-rule prepare_dataset_vcf_dataset2:
-    input:
-        vcf="data/variants.vcf.gz"
-    output:
-        "data/dataset2/variants.vcf.gz"
-    params:
-        regions=get_dataset2_regions_comma_separated,
-    conda: "envs/prepare_data.yml"
-    shell:
-        "zcat {input} | python3 scripts/filter_variants_with_n.py | bgzip -c > {output} && tabix -p vcf -f {output}"
-
-
-
-rule prepare_svdataset_vcf:
-    input:
-        vcf="data/sv-variants.vcf.gz"
-    output:
-        variants="data/svdataset{number,\d+}/variants.vcf.gz",
-        tmp1="data/svdataset{number,\d+}/variants.vcf.gz.tmp1",
-        tmp2="data/svdataset{number,\d+}/variants.vcf.gz.tmp2"
-    params:
-        regions=get_svdataset_regions_comma_separated,
-        skip_individuals=get_dataset_skipped_individuals_comma_separated
-    conda: "envs/prepare_data.yml"
-    shell:
-        #"bcftools view -O z --regions {config[analysis_regions][{dataset}]} variants.vcf.gz > {output} && tabix -p vcf {output} "
-        "zcat {input.vcf} | python3 scripts/filter_uncertain_sv.py | bgzip -c -f | "
-        "bcftools annotate --rename-chrs resources/chromosome-mappings.txt -O z - > {output.tmp1} && tabix -p vcf -f {output.tmp1} && "
-        "bcftools view -f PASS --samples ^{params.skip_individuals} -O z {output.tmp1} > {output.tmp2} && tabix -p vcf -f {output.tmp2} && "
-        #"> {output.tmp} && tabix -p vcf -f {output.tmp} && "
-        #"bcftools view -f PASS --samples ^{params.skip_individuals} -O z {output.tmp} |"
-        "bcftools view --regions {params.regions} {output.tmp2} | "
-        "bcftools +fill-tags /dev/stdin -O z -- -t AF "
-        " > {output.variants} && tabix -f -p vcf {output.variants} "
-
 rule prepare_dataset_reference:
     input:
-        "data/hg38_chr1-Y.fa"
+        config["reference_file"]
     output:
         full_reference="data/{dataset}/ref.fa",
         index="data/{dataset}/ref.fa.fai"
@@ -130,16 +55,16 @@ rule prepare_dataset_reference:
         "samtools faidx {input} {params.regions} | python3 scripts/format_fasta_header.py > {output.full_reference}  && " 
         "samtools faidx {output.full_reference}"
 
+
+# makes a "flat" reference, one sequence for the whole genome
 rule make_flat_reference:
     input: "data/{d}/ref.fa"
     output:
         fasta="data/{d}/ref_flat.fa",
         index="data/{d}/ref_flat.fa.fai"
-    #shell: "grep -v '^>' {input} > {input}.no-headers && echo -e \">ref\n$(cat {input}.no-headers)\" > {output.fasta} && samtools faidx {output.fasta}"
-    #shell: "grep -v '^>' {input} > {output.fasta}.tmp && echo '>ref' > {output.fasta} && cat {output.fasta}.tmp >> {output.fasta} && samtools faidx {output.fasta}"
     conda: "envs/prepare_data.yml"
     shell:
-        r"""python3 scripts/make_flat_reference.py {input} | fold -w 80 > {output.fasta} && samtools faidx {output.fasta}"""
+        r"""python scripts/make_flat_reference.py {input} | fold -w 80 > {output.fasta} && samtools faidx {output.fasta}"""
 
 
 rule remove_genotype_info:
@@ -193,16 +118,6 @@ rule uncompress_subsampled_vcf:
         vcf="data/{dataset}/variants_{n_individuals,\d+}{subpopulation}.vcf"
     shell:
         "zcat {input} > {output}"
-
-
-rule bwa_index_reference_genome:
-    input:
-        "data/{dataset}/ref.fa"
-    output:
-        "data/{dataset}/ref.fa.bwt"
-    conda: "envs/bwa.yml"
-    shell:
-        "bwa index {input}"
 
 
 rule convert_fa_to_fq:

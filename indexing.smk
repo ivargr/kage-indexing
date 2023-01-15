@@ -19,14 +19,6 @@ def get_dataset_genome_size(wildcards):
     return config["analysis_regions"][wildcards.dataset]["genome_size"]
 
 
-# some ruleorders that enable getting stuff from pre-built index bundles
-# comment out along with the rules to make everything froms scratch
-#ruleorder:
-#    download_index_bundle > make_index_bundle
-
-#ruleorder:
-#    get_variant_kmer_index_from_bundle > make_variant_kmer_index_with_reverse_complements
-
 
 rule make_chromosome_graph:
     input:
@@ -158,7 +150,7 @@ rule make_count_model:
     shell:
         "kage sample_node_counts_from_population -g {input.graph} "
         "-H {input.haplotype_to_nodes} "
-        "-i {input.counter_index} -o {output} -t 16 --max-count 15"
+        "-i {input.counter_index} -o {output} -t 20 --max-count 5"
 
 
 rule refine_count_model:
