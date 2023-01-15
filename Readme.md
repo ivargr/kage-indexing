@@ -32,6 +32,9 @@ pip install -r python_requirements.txt
 
 Put these somewhere (e.g in the data folder) and edit config.yml to point to the location.
 
+* Your reference genome should be a `.fa` file
+* Your variants should be a `vcf.gz` file with an accompanying index ending with `vcf.gz.tbi`. Your variants need to have phased genotypes.
+
 
 ### Step 4: Edit config.yml
 
@@ -53,3 +56,8 @@ The important parts here are:
 * `data/dataset2/index_1000all.npz`: This is the index file we tell Snakemake to create and this is the index file that kage will need. Here we specify the `dataset2` folder because we have defined this in the `config.yml` file. It is a good idea to try to create an index for e.g. one chromosome or a small part of a chromosome first, to check that nothing crashes. The `1000all` tells the pipeline to include 1000 individuals in the model. Running time scales linearly with the number of individuals, so to save time you can specify fewer individuals.
 
 If the Snakemake command runs sucecssfully, you should end up with the given index which can be used directly with kage.
+
+
+Note:
+
+* If the snakemake pipeline crashes, you might be left with used memory that is not freed. You can free this by running `kage free_memory`.
