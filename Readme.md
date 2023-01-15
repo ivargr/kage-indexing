@@ -3,14 +3,14 @@
 
 This repository contains a snakemake pipeline for making an index that can be used with KAGE. To use this pipeline, you will need:
     
-* A VCF with phased genotypes of a population, e.g. a thousand genomes VCF
+* A VCF with genotypes of a population, e.g. a thousand genomes VCF. Only biallelic variants are supported for now.
 * A reference genome
 
 **Note**
 
 Making indexes for a species such as human with e.g. using Thousands Genomes Project variants, unfortunately takes some time (2-3 days) and requires a lot of computational power. You should have a system with 30+ cores and 512 GB of RAM. We are working on rewriting a lot of the indexing code, and hope to have a much quicker and smoother process in the future. If you are genotyping humans, a good option is to use one of our prebuilt indexes. If you want to make indexes for another species, feel free to contact us (ivargry@ifi.uio.no) and we might be able to build the indexes for you or help you out.
 
-## Getting started
+## Running the pipeline
 
 ### Step 1: Intall Snakemake and Conda
 Before you start, you will need both Snakemake (to run the benchmarking pipeline) and Conda (to get all the correct dependencies. [Follow the instructions](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to install Snakemake if you don't have Snakemake allready.
