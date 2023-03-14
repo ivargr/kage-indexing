@@ -55,7 +55,6 @@ rule make_variant_to_nodes:
         "data/{dataset}/variant_to_nodes.npz"
     resources:
         mem_gb=60
-    
     shell:
         "obgraph make_variant_to_nodes -g {input.graph} -v {input.vcf} -o {output}"
 
@@ -101,7 +100,7 @@ rule make_genotype_txt_matrix:
     threads: 1
     benchmark: "data/{dataset}/benchmarks/make_genotype_txt_matrix_{n_individuals}{subpopulation}.tsv"
     conda:
-        "envs/prepare_data.yml"
+        "../envs/prepare_data.yml"
     shell:
         'gunzip -c {input} | grep -v "^#" | cut -f 10- | tr -d "|" | tr "\n" "\t" | tr -d "\t" | pigz -c > {output} '
 
@@ -194,20 +193,6 @@ rule make_disc_backed_haplotype_to_nodes:
         #"obgraph make_haplotype_to_nodes -g {input.graph} -v {input.vcf} -n $n_haplotypes -o {output}"
         "obgraph make_haplotype_to_nodes_bnp -g {input.variant_to_nodes} -v {input.phased_genotype_matrix} -n $n_haplotypes -o {output} -d True"
 
-
-"""
-rule convert_genotype_matrix:
-    input:
-        genotype_matrix = "data/{dataset}/genotype_matrix_{n_individuals}individuals.npy",
-    output:
-        genotype_matrix = "data/{dataset}/genotype_matrix_converted_{n_individuals,\d+}individuals.npy",
-    resources:
-        mem_gb=200
-    threads:
-        config["n_threads_data"]
-    shell:
-        "obgraph convert_genotype_matrix -g {input.genotype_matrix} -o {output.genotype_matrix} -t 8"
-"""
 
 rule make_transition_probabilities:
     input:
