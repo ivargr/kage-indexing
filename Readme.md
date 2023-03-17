@@ -41,15 +41,19 @@ This will run a full build of a small human index and runs kage with the final i
 
 ### Step 4: Get your variants and reference genome
 
-Put these somewhere (e.g in the data folder) and edit config.yml to point to the location.
+Put these somewhere (e.g in the local_data folder):
 
-* Your reference genome should be a `.fa` file
-* Your variants should be a `vcf.gz` file with an accompanying index ending with `vcf.gz.tbi`. Your variants need to have phased genotypes.
+* Your reference genome should end with `.fa` or a `.2bit` to be detected by snakemake.
+* Your variants should be a `vcf.gz` file with an accompanying index ending with `vcf.gz.tbi`. Your variants should ideally be phased and not have missing genotypes. If there are missing genotypes (i.e. "."), these will be treated as the reference allele. Variants are not required to be phased, but accuracy will likely be better with phased variants.
 
 
 ### Step 4: Edit config.yml
 
-Edit the `config.yml` file so that it fits with your data (e.g. specify chromosomes). The file includes an explanation of what needs to be edited.
+Edit the `config.yml` file so that it fits with your data.
+
+* Add an entry for your variants under `variants:`. Note that your variants can either point to a local path or some url. 
+* Add an entry for you reference genome under `genomes:` 
+* Create a new dataset under `analysis_regions`. Specify chromsomes. Note: It is a good idea to create a dataset for just a single or a few chromosomes first and test the whole pipeline to see that it doesn't crash before you try to make an index for the whole genome.
 
 
 ### Step 5: Run
@@ -57,14 +61,14 @@ Edit the `config.yml` file so that it fits with your data (e.g. specify chromoso
 Run the snakemake pipeline:
 
 ```bash
-snakemake --use-conda --cores 40 --resource mem_gb=450 data/dataset2/index_1000all.npz
+snakemake --use-conda --cores 40 --resource mem_gb=450 data/your_dataset/index_100all.npz
 ```
 
 The important parts here are:
 
 * `--use-conda` (can be skipped, but then you will need to manually install alot of tools, such as bcftools, samtools, etc)
 * `--resources mem_gb=450`: Should be set to approximately how much memory your system has. Snakemake will try to adjust which and how many jobs are run in parallel. Note that the memory requirements of each job are hardcoded, so this will be very approximate. If you run out of memory, you can try to lower the number here.
-* `data/dataset2/index_1000all.npz`: This is the index file we tell Snakemake to create and this is the index file that kage will need. Here we specify the `dataset2` folder because we have defined this in the `config.yml` file. It is a good idea to try to create an index for e.g. one chromosome or a small part of a chromosome first, to check that nothing crashes. The `1000all` tells the pipeline to include 1000 individuals in the model. Running time scales linearly with the number of individuals, so to save time you can specify fewer individuals.
+* `data/dataset2/index_100all.npz`: This is the index file we tell Snakemake to create and this is the index file that kage will need. Here we specify the `your_dataset` folder because we have defined this datset in the `config.yml` file. It is a good idea to try to create an index for e.g. one chromosome or a small part of a chromosome first, to check that nothing crashes. The `100all` tells the pipeline to include 100 individuals in the model. Running time scales linearly with the number of individuals, so to save time you can specify fewer individuals. It might be a good idea to set this number really low first to see that things run smootly and then increase it for the final index.
 
 If the Snakemake command runs sucecssfully, you should end up with the given index which can be used directly with kage.
 
@@ -72,3 +76,5 @@ If the Snakemake command runs sucecssfully, you should end up with the given ind
 Note:
 
 * If the snakemake pipeline crashes, you might be left with used memory that is not freed. You can free this by running `kage free_memory`.
+* Feel free to reach out if anything doesn't seem to work as it should. This pipeline is under development and has been tested with human and yeast genomes.
+

@@ -31,6 +31,9 @@ n_threads_data: 40
 # smaller number of threads to used for memory-intensive tasks
 n_threads_data_quarter: 25
 
+# random seed for random operations, e.g. when using random individuals for the model
+random_seed: 1
+
 
 # Configuration for varius indexes
 # Each index below should have a name starting with dataset and followed by a number (e.g. dataset1).
