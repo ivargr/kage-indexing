@@ -3,7 +3,7 @@ kage-genotyper==0.1.9
 bionumpy>=0.2.12
 shared_memory_wrapper>=0.0.24
 kmer_mapper>=0.0.25
-obgraph>=0.0.28
-graph_read_simulator=0.0.11
+obgraph>=0.0.35
+graph_read_simulator
 tabulate
 pandas

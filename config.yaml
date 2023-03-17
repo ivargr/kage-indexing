@@ -65,7 +65,7 @@ analysis_regions:
     chromosomes: "chrIV chrXV"
     genome_size: "2623224"
 
-  dataset11:
+  yeast_small_test:
     reference: sacCer3
     variants: sacCer3_common
     region: "chrIV chrXV"
