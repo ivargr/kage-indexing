@@ -1,3 +1,4 @@
+[![Test]( https://github.com/ivargr/kage-indexing/actions/workflows/test.yml/badge.svg)](https://github.com/ivargr/kage-indexing/actions/workflows/test.yml)
 
 # Making indexes for KAGE
 
