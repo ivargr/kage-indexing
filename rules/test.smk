@@ -14,7 +14,7 @@ rule run_kage:
 # test kage with realistic data on a human index
 rule test:
     input:
-        "local_data/ref-hg002_simulated_reads_15x.genotyped-truth_hg002.summary.csv"
+        "local_data/hg38_small_test-hg002_simulated_reads_15x.genotyped-truth_hg002.summary.csv"
     output:
         touch("test.txt")
     run:
