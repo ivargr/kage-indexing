@@ -1,3 +1,4 @@
+bionumpy>=0.2.21
 npstructures>=0.2.2
 kage-genotyper==0.1.9
 bionumpy>=0.2.12
