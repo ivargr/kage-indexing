@@ -4,7 +4,7 @@ genomes:
     url: "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.2bit"
   hg38_numeric:
     url: "local_data/hg38_numeric.2bit"
-  hg38_small:
+  hg38_small_test:
     url: "local_data/hg38_small_test.fa"
   sacCer3:
     url: "local_data/sacCer3.2bit"

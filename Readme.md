@@ -3,12 +3,14 @@
 
 This repository contains a snakemake pipeline for making an index that can be used with KAGE. To use this pipeline, you will need:
     
-* A VCF with genotypes of a population, e.g. a thousand genomes VCF. Only biallelic variants are supported for now.
-* A reference genome
+* A VCF with genotypes of a population, e.g. a thousand genomes VCF. Only biallelic variants are supported for now. The snakemake pipeline will try to split variants into biallelic if you have multiallelic variants, and it will also remove some overlapping indels that may cause trouble. 
+* A reference genome (.fa or .2bit format)
 
 **Note**
 
 Making indexes for a species such as human with e.g. using Thousands Genomes Project variants, unfortunately takes some time (2-3 days) and requires a lot of computational power. You should have a system with 30+ cores and 512 GB of RAM. We are working on rewriting a lot of the indexing code, and hope to have a much quicker and smoother process in the future. If you are genotyping humans, a good option is to use one of our prebuilt indexes. If you want to make indexes for another species, feel free to contact us (ivargry@ifi.uio.no) and we might be able to build the indexes for you or help you out.
+
+The pipeline has been tested to work with human and yeast data, and we would be happy to try to make indexes for other species -- feel free to reach out.
 
 ## Running the pipeline
 
@@ -41,10 +43,10 @@ This will run a full build of a small human index and runs kage with the final i
 
 ### Step 4: Get your variants and reference genome
 
-Put these somewhere (e.g in the local_data folder):
+Put these somewhere (e.g in the local_data folder or anywhere else on your computer):
 
-* Your reference genome should end with `.fa` or a `.2bit` to be detected by snakemake.
-* Your variants should be a `vcf.gz` file with an accompanying index ending with `vcf.gz.tbi`. Your variants should ideally be phased and not have missing genotypes. If there are missing genotypes (i.e. "."), these will be treated as the reference allele. Variants are not required to be phased, but accuracy will likely be better with phased variants.
+* Your reference genome should end with `.fa` or a `.2bit` in order to be detected by snakemake.
+* Your variants should be a `vcf.gz` file with an accompanying index ending with `vcf.gz.tbi`. Your variants should ideally be phased and not have many missing genotypes. If there are missing genotypes (i.e. "."), these will be treated as the reference allele. Variants are not required to be phased, but accuracy will likely be better with phased variants.
 
 
 ### Step 4: Edit config.yml
@@ -53,7 +55,7 @@ Edit the `config.yml` file so that it fits with your data.
 
 * Add an entry for your variants under `variants:`. Note that your variants can either point to a local path or some url. 
 * Add an entry for you reference genome under `genomes:` 
-* Create a new dataset under `analysis_regions`. Specify chromsomes. Note: It is a good idea to create a dataset for just a single or a few chromosomes first and test the whole pipeline to see that it doesn't crash before you try to make an index for the whole genome.
+* Create a new dataset under `analysis_regions`. Specify chromsomes. Note: It is a good idea to define a small dataset for just a single or a few chromosomes first and test the whole pipeline to see that it doesn't crash before you try to make an index for the whole genome.
 
 
 ### Step 5: Run
