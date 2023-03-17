@@ -5,7 +5,7 @@ n_skipped = 0
 
 for i, line in enumerate(sys.stdin):
 
-    if i % 1000 == 0:
+    if i % 10000 == 0:
         logging.info("%d lines processed, %d variants with N skipped" % (i, n_skipped))
 
     if line.startswith("#"):
@@ -18,3 +18,6 @@ for i, line in enumerate(sys.stdin):
         continue
 
     print(line, end="")
+
+
+logging.info("Removed %d variants with n in alt or ref sequence" % (n_skipped))

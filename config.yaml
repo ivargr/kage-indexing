@@ -1,47 +1,35 @@
 
 genomes:
   hg38:
-    is_remote: True
     url: "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.2bit"
-
+  hg38_numeric:
+    url: "local_data/hg38_numeric.2bit"
+  hg38_small:
+    url: "local_data/hg38_small_test.2bit"
   sacCer3:
-    is_remote: True
-    url: "https://hgdownload.soe.ucsc.edu/goldenPath/sacCer3/bigZips/sacCer3.2bit"
+    url: "local_data/sacCer3.2bit"
+
+
+# Note: There should also be a .tbi index file for each .vcf.gz file
+variants:
+  thousand_genomes:
+    url: "data/variants.vcf.gz"
+  thousand_genomes_small_test:
+    url: "local_data/thousand_genomes_small_test.vcf.gz"
+  sacCer3:
+    url: "local_data/sacCer3.vcf.gz"
+  sacCer3_common:
+    url: "local_data/sacCer3_common.vcf.gz"
 
 
 # k-mer size for kage, should not be larger than 31
-k:
-  31
-
-n_threads:
-  16
+k: 31
 
 # n threads to use when indexing data
-n_threads_data:
-  40
+n_threads_data: 40
 
 # smaller number of threads to used for memory-intensive tasks
-n_threads_data_quarter:
-  25
-
-hg38_2bit_file:
-  "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.2bit"
-  #"http://ivarg.ddns.net/hg38.2bit"
-
-random_seed:
-  1
-
-# Full list of chromosomes, space-separated
-chromosomes:
-  "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X"
-
-# Path to genotyped variants that indexes will be based on
-# Note: You will also need a vcf index file in the same location (e.g. variants.vcf.gz.tbi)
-variants_file:
-  "data/variants.vcf.gz"
-
-reference_file:
-  "data/reference.fa"
+n_threads_data_quarter: 25
 
 
 # Configuration for varius indexes
@@ -50,11 +38,11 @@ reference_file:
 # n_nodes should be a guess of the number of nodes requierd to build the genome graph
 #   n_nodes only needs to be larger than the actual number of nodes, set to number of variants x 4 to be safe
 
-
 analysis_regions:
   # Example: Will build an index only for chromosome 1, basepairs 1 to 5m
   dataset1:
-    reference: hg38
+    reference: hg38_small_test  # this should point to the name of a reference genome specified above
+    variants: thousand_genomes_small_test  # this should point to a set of variants specified above
     region: "1:1-5000000"
     genome_size: "5000000"
     chromosomes: "1"
@@ -64,6 +52,7 @@ analysis_regions:
   # Example: Whole genome index
   dataset2:
     reference: hg38
+    variants: thousand_genomes
     region: "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X"
     genome_size: "3031000000"
     chromosomes: "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X"
@@ -71,6 +60,14 @@ analysis_regions:
 
   dataset10:
     reference: sacCer3
-    region: "IV V"
+    variants: sacCer3
+    region: "chrIV chrV"
+    chromosomes: "chrIV chrXV"
+    genome_size: "2623224"
+
+  dataset11:
+    reference: sacCer3
+    variants: sacCer3_common
+    region: "chrIV chrXV"
     chromosomes: "chrIV chrXV"
     genome_size: "2623224"

@@ -6,13 +6,13 @@ def get_dataset_regions(wildcards):
     return config["analysis_regions"][wildcards.dataset]["region"]
 
 def get_dataset_regions_comma_separated(wildcards):
-    return config["analysis_regions"]["dataset" + wildcards.number]["region"].replace(" ", ",")
+    return config["analysis_regions"][wildcards.dataset]["region"].replace(" ", ",")
 
 def get_dataset2_regions_comma_separated(wildcards):
     return config["analysis_regions"]["dataset2"]["region"].replace(" ", ",")
 
 def only_snps_command(wildcards):
-    if "only_snps" in config["analysis_regions"]["dataset" + wildcards.number]:
+    if "only_snps" in config["analysis_regions"][wildcards.dataset]:
         return " | bcftools filter -i 'TYPE=\"snp\"' /dev/stdin -O z"
     return ""
 
@@ -29,23 +29,51 @@ def get_dataset_skipped_individuals_comma_separated(wildcards):
     return config["analysis_regions"]["svdataset" + wildcards.number]["skip_individuals"].replace(" ", ",")
 
 
+def download_variants_command(wildcards, input, output):
+    genome_config = config["variants"][wildcards.variants_id]
+
+    url = genome_config["url"]
+    if url.startswith("http"):
+        print("Data is remote")
+        return f"wget -O {output.variants} {url}  &&  wget -O {output.index} {url}.tbi"
+    else:
+        print("Data is local")
+        return f"cp {url} {output.variants}  && cp {url}.tbi {output.index}"
+
+
+rule download_variants:
+    output:
+        variants="data/{variants_id,\w+}.vcf.gz",
+        index="data/{variants_id,\w+}.vcf.gz.tbi"
+    params:
+        command=download_variants_command
+    shell:
+        "{params.command}"
+
+
 rule prepare_dataset_vcf:
     input:
-        vcf=config["variants_file"]
+        vcf=lambda wildcards: "data/" + config["analysis_regions"][wildcards.dataset]["variants"] + ".vcf.gz",
+        ref=lambda wildcards: "data/" + config["analysis_regions"][wildcards.dataset]["reference"] + ".fa"
     output:
-        "data/dataset{number,\d+}/variants.vcf.gz"
+        "data/{dataset}/variants.vcf.gz"
     params:
         regions=get_dataset_regions_comma_separated,
         only_snps_command=only_snps_command
     conda: "../envs/prepare_data.yml"
     shell:
-        "bcftools view --regions {params.regions} {input.vcf} {params.only_snps_command} | python3 scripts/filter_variants_with_n.py | bgzip -c > {output} && tabix -f -p vcf {output} "
+        "bcftools view --regions {params.regions} {input.vcf} {params.only_snps_command} | "
+        "bcftools norm -m-any --check-ref -w -f {input.ref} - > {output}.tmp &&  "
+        "python3 scripts/filter_variants_with_n.py | "
+        "python3 scripts/remove_overlapping_indels.py {output}.tmp | "
+        "python3 scripts/remove_extra_format_fields_from_vcf.py | "
+        "bgzip -c > {output} && tabix -f -p vcf {output} "
 
 
 rule prepare_dataset_reference:
     input:
         #config["reference_file"]
-        ref=lambda wildcards: "data/" + config["analysis_regions"][wildcards.dataset]["reference"] + "_numeric.fa"
+        ref=lambda wildcards: "data/" + config["analysis_regions"][wildcards.dataset]["reference"] + ".fa"
     output:
         full_reference="data/{dataset}/ref.fa",
         index="data/{dataset}/ref.fa.fai"
@@ -72,18 +100,6 @@ rule remove_genotype_info:
     input: "{sample}.vcf.gz"
     output: "{sample}_no_genotypes.vcf"
     shell: "zcat {input} | cut -f 1-9 - > {output}"
-
-rule get_all_sample_names_from_vcf_chinese_subpopulation:
-    input:
-        "resources/sample_names_chinese.txt"
-    output:
-        sample_names="data/{dataset}/sample_names_chinese.txt",
-        sample_names_random="data/{dataset}/sample_names_random_order_chinese.txt"
-    conda: "../envs/prepare_data.yml"
-    shell:
-        "cp {input} {output.sample_names} && "
-        "python scripts/shuffle_lines.py {output.sample_names} {config[random_seed]} > {output.sample_names_random} "
-
 
 
 rule get_all_sample_names_from_vcf:

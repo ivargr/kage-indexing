@@ -28,6 +28,17 @@ All Python dependencies you will need are listed in `python_requirements.txt` an
 pip install -r python_requirements.txt
 ```
 
+### Step 4: Test that the pipeline works
+
+This repository comes with some real data for testing that the pipeline works as expected. It is a very good idea to run this test before starting to run with your own data, so that you know that things have been installed correctly. Simply run:
+
+```bash
+snakemake --use-conda test
+```
+
+This will run a full build of a small human index and runs kage with the final index and checks that the accuracy is as expected. This should take about 5 minutes to finish. If you don't get any error messages, things are fine.
+
+
 ### Step 4: Get your variants and reference genome
 
 Put these somewhere (e.g in the data folder) and edit config.yml to point to the location.
