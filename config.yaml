@@ -5,7 +5,7 @@ genomes:
   hg38_numeric:
     url: "local_data/hg38_numeric.2bit"
   hg38_small:
-    url: "local_data/hg38_small_test.2bit"
+    url: "local_data/hg38_small_test.fa"
   sacCer3:
     url: "local_data/sacCer3.2bit"
 

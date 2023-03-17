@@ -1,0 +1,29 @@
+
+name: Test
+
+on:
+  # small benchmark on push and pull request
+  push:
+    branches: ["dev", "master"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: Run test
+        uses: snakemake/snakemake-github-action@v1
+        with:
+          directory: '.'
+          snakefile: 'Snakefile'
+          args: '-F --cores 8 --use-conda test'
+          stagein: | 
+            python -m pip install --upgrade pip setuptools wheel
+            pip install -r python_requirements.txt
+
+
