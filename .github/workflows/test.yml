@@ -22,7 +22,9 @@ jobs:
           directory: '.'
           snakefile: 'Snakefile'
           args: '-F --cores 8 --use-conda test'
-          stagein: | 
+          stagein: |
+            apt-get update
+            apt-get -y install gcc
             python -m pip install --upgrade pip setuptools wheel
             pip install -r python_requirements.txt
 
