@@ -29,7 +29,7 @@ k: 31
 n_threads_data: 2
 
 # smaller number of threads to used for memory-intensive tasks
-n_threads_data_quarter: 1
+n_threads_data_quarter: 2
 
 # random seed for random operations, e.g. when using random individuals for the model
 random_seed: 1
