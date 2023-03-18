@@ -1,6 +1,6 @@
 bionumpy>=0.2.21
 npstructures>=0.2.2
-kage-genotyper>=0.1.12
+kage-genotyper>=0.1.13
 bionumpy>=0.2.12
 shared_memory_wrapper>=0.0.24
 kmer_mapper>=0.0.25
