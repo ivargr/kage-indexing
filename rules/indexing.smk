@@ -347,7 +347,8 @@ rule get_variant_kmers:
     
     shell:
         "graph_kmer_index make_unique_variant_kmers -g {input.graph} -V {input.variant_to_nodes} -k {config[k]} -o {output} -v {input.vcf} "
-        " -t {config[n_threads_data_quarter]} -c 20000 --max-variant-nodes 3 -I {input.linear_kmer_index} -p {input.position_id_index} -D True "
+        " -t {config[n_threads_data_quarter]} -c 4000 --max-variant-nodes 3 -I {input.linear_kmer_index} -p {input.position_id_index} -D True "
+
 
 rule get_structural_variant_kmers:
     input:
