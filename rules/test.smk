@@ -7,7 +7,7 @@ rule run_kage:
         "{reads}.genotyped.vcf"
     shell:
         """
-        kage genotype -i {input.index} -k 31 -r {input.reads} -b True -B True -i {input.index} -o {output}
+        kage genotype -i {input.index} -k 31 -r {input.reads} -b True -B True -i {input.index} -o {output} -t 1
         """
 
 
