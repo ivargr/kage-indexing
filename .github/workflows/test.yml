@@ -21,7 +21,7 @@ jobs:
         with:
           directory: '.'
           snakefile: 'Snakefile'
-          args: '-F --cores 8 --use-conda test'
+          args: '-F --cores 8 --use-conda data/dataset1/index_25all.npz'  # test building a small human index
           stagein: |
             apt-get update
             apt-get -y install gcc
