@@ -149,7 +149,7 @@ rule make_count_model:
     shell:
         "kage sample_node_counts_from_population -g {input.graph} "
         "-H {input.haplotype_to_nodes} "
-        "-i {input.counter_index} -o {output} -t 20 --max-count 5"
+        "-i {input.counter_index} -o {output} -t {config[n_threads_population_sampling]} --max-count 5"
 
 
 rule refine_count_model:
@@ -347,7 +347,7 @@ rule get_variant_kmers:
     
     shell:
         "graph_kmer_index make_unique_variant_kmers -g {input.graph} -V {input.variant_to_nodes} -k {config[k]} -o {output} -v {input.vcf} "
-        " -t 1 -c 4000 --max-variant-nodes 3 -I {input.linear_kmer_index} -p {input.position_id_index} -D True "
+        " -t {config[n_threads_kmer_index]} -c 4000 --max-variant-nodes 3 -I {input.linear_kmer_index} -p {input.position_id_index} -D True "
 
 
 rule get_structural_variant_kmers:

@@ -25,11 +25,18 @@ variants:
 # k-mer size for kage, should not be larger than 31
 k: 31
 
-# n threads to use when making indexing data
+# n threads to use when making indexing data. Should be set to number of cores available
 n_threads_data: 2
 
 # smaller number of threads to used for memory-intensive tasks
 n_threads_data_quarter: 2
+
+# number of threads to use when sampling kmer counts from population
+# memory use scales linearly with this
+n_threads_population_sampling: 1
+
+# number of threads for making kmer index. Should be set to number of cores available
+n_threads_kmer_index: 1
 
 # random seed for random operations, e.g. when using random individuals for the model
 random_seed: 1
