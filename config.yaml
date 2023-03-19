@@ -22,6 +22,16 @@ variants:
     url: "local_data/sacCer3_common.vcf.gz"
 
 
+truth_datasets:
+  hg002:
+    vcf: "local_data/truth_hg002.vcf.gz"
+    regions: "local_data/truth_hg002_regions.bed"
+
+  yeast_BKI:
+    vcf: "local_data/truth_BKI.vcf.gz"
+    regions: "local_data/truth_BKI_regions.bed"
+
+
 # k-mer size for kage, should not be larger than 31
 k: 31
 
@@ -56,6 +66,7 @@ analysis_regions:
     region: "1:1-5000000"
     genome_size: "5000000"
     chromosomes: "1"
+    simulation_chromosomes: "1"
     n_nodes: "5000000"
 
   # Example: Whole genome index
@@ -78,5 +89,6 @@ analysis_regions:
     reference: sacCer3
     variants: sacCer3_common
     region: "chrIV chrXV"
+    simulation_chromosomes: "chrIV chrXV"
     chromosomes: "chrIV chrXV"
     genome_size: "2623224"

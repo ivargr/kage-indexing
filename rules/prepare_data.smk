@@ -34,10 +34,10 @@ def download_variants_command(wildcards, input, output):
 
     url = genome_config["url"]
     if url.startswith("http"):
-        print("Data is remote")
-        return f"wget -O {output.variants} {url}  &&  wget -O {output.index} {url}.tbi"
+        print("data is remote")
+        return f"wget -o {output.variants} {url}  &&  wget -o {output.index} {url}.tbi"
     else:
-        print("Data is local")
+        print("data is local")
         return f"cp {url} {output.variants}  && cp {url}.tbi {output.index}"
 
 

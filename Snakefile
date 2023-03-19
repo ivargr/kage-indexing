@@ -1,6 +1,7 @@
 configfile: "config.yaml"
 include: "rules/prepare_data.smk"
 include: "rules/indexing.smk"
+include: "rules/read_simulation.smk"
 include: "rules/test.smk"
 
 wildcard_constraints:
