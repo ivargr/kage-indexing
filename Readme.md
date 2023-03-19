@@ -4,7 +4,7 @@
 
 This repository contains a snakemake pipeline for making an index that can be used with KAGE. To use this pipeline, you will need:
     
-* A VCF with genotypes of a population, e.g. a thousand genomes VCF. Only biallelic variants are supported for now. The snakemake pipeline will try to split variants into biallelic if you have multiallelic variants, and it will also remove some overlapping indels that may cause trouble. 
+* A VCF with genotypes of a population, e.g. a thousand genomes VCF. Only biallelic variants are supported for now. The snakemake pipeline will try to split variants into biallelic if you have multiallelic variants, and it will also remove some overlapping indels that may cause trouble if there are any.
 * A reference genome (.fa or .2bit format)
 
 **Note**
@@ -57,6 +57,7 @@ Edit the `config.yml` file so that it fits with your data.
 * Add an entry for your variants under `variants:`. Note that your variants can either point to a local path or some url. 
 * Add an entry for you reference genome under `genomes:` 
 * Create a new dataset under `analysis_regions`. Specify chromsomes. Note: It is a good idea to define a small dataset for just a single or a few chromosomes first and test the whole pipeline to see that it doesn't crash before you try to make an index for the whole genome.
+* Change all the parameters starting with `n_threads`. These specifies the number of threads used for various parts of the pipeline. These can usually be set to the number of cores available.
 
 
 ### Step 5: Run

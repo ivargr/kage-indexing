@@ -45,8 +45,8 @@ random_seed: 1
 # Configuration for varius indexes
 # Each index below should have a name starting with dataset and followed by a number (e.g. dataset1).
 # The index will be built in a folder inside the data directory (e.g. data/dataset1).
-# n_nodes should be a guess of the number of nodes requierd to build the genome graph
-#   n_nodes only needs to be larger than the actual number of nodes, set to number of variants x 4 to be safe
+# n_nodes should be a guess of the number of graph nodes requierd to build the genome graph
+# n_nodes only needs to be larger than the actual number of nodes, i.e. set it to the number of variants x 4 to be safe
 
 analysis_regions:
   # Example: Will build an index only for chromosome 1, basepairs 1 to 5m
@@ -56,7 +56,6 @@ analysis_regions:
     region: "1:1-5000000"
     genome_size: "5000000"
     chromosomes: "1"
-    simulation_chromosomes: "1"
     n_nodes: "5000000"
 
   # Example: Whole genome index
