@@ -21,7 +21,7 @@ jobs:
         with:
           directory: '.'
           snakefile: 'Snakefile'
-          args: '-F --cores 8 --config n_threads_data=2 --config n_threads_data_quarter=2 --config n_threads_population_sampling=1 --config n_threads_kmer_index=1 --use-conda data/dataset1/index_25all.npz'  # test building a small human index
+          args: '-F --cores 8 --config n_threads_data=2 n_threads_data_quarter=2 n_threads_population_sampling=1 n_threads_kmer_index=1 --use-conda data/dataset1/index_25all.npz'  # test building a small human index
           stagein: |
             apt-get update
             apt-get -y install gcc
