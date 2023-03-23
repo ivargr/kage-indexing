@@ -344,10 +344,13 @@ rule get_variant_kmers:
         "data/{dataset}/benchmarks/get_variant_kmers.tsv"
     resources: mem_gb=400
     threads: config["n_threads_data"]
-    
+    params:
+        command = lambda w: "make_unique_variant_kmers" if not config["use_biocy"] else "make_unique_variant_kmers_biocy"
     shell:
-        "graph_kmer_index make_unique_variant_kmers -g {input.graph} -V {input.variant_to_nodes} -k {config[k]} -o {output} -v {input.vcf} "
+        "graph_kmer_index {params.command} -g {input.graph} -V {input.variant_to_nodes} -k {config[k]} -o {output} -v {input.vcf} "
         " -t {config[n_threads_kmer_index]} -c 4000 --max-variant-nodes 3 -I {input.linear_kmer_index} -p {input.position_id_index} -D True "
+        #"graph_kmer_index {params.command} -g {input.graph} -V {input.variant_to_nodes} -k {config[k]} -o {output} "
+        #" --max-variant-nodes 3 -I {input.linear_kmer_index} "
 
 
 rule get_structural_variant_kmers:
