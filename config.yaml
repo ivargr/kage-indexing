@@ -8,6 +8,8 @@ genomes:
     url: "local_data/hg38_small_test.fa"
   sacCer3:
     url: "local_data/sacCer3.2bit"
+  mm10:
+    url: "local_data/mm10_numeric.fa"
 
 
 # Note: There should also be a .tbi index file for each .vcf.gz file
@@ -20,6 +22,8 @@ variants:
     url: "local_data/sacCer3.vcf.gz"
   sacCer3_common:
     url: "local_data/sacCer3_common.vcf.gz"
+  mouse_genomes_project:
+    url: "local_data/mgp_common.vcf.gz"
 
 
 truth_datasets:
@@ -36,17 +40,17 @@ truth_datasets:
 k: 31
 
 # n threads to use when making indexing data. Should be set to number of cores available
-n_threads_data: 2
+n_threads_data: 40
 
 # smaller number of threads to used for memory-intensive tasks
-n_threads_data_quarter: 2
+n_threads_data_quarter: 20
 
 # number of threads to use when sampling kmer counts from population
 # memory use scales linearly with this
-n_threads_population_sampling: 1
+n_threads_population_sampling: 25
 
 # number of threads for making kmer index. Should be set to number of cores available
-n_threads_kmer_index: 1
+n_threads_kmer_index: 40
 
 # random seed for random operations, e.g. when using random individuals for the model
 random_seed: 1
@@ -92,3 +96,27 @@ analysis_regions:
     simulation_chromosomes: "chrIV chrXV"
     chromosomes: "chrIV chrXV"
     genome_size: "2623224"
+
+  yeast_whole_genome:
+    reference: sacCer3
+    variants: sacCer3_common
+    region: 'chrI chrII chrIII chrIV chrV chrVI chrVII chrVIII chrIX chrX chrXI chrXII chrXIII chrXIV chrXV chrXVI'
+    simulation_chromosomes: 'chrI chrII chrIII chrIV chrV chrVI chrVII chrVIII chrIX chrX chrXI chrXII chrXIII chrXIV chrXV chrXVI'
+    chromosomes: 'chrI chrII chrIII chrIV chrV chrVI chrVII chrVIII chrIX chrX chrXI chrXII chrXIII chrXIV chrXV chrXVI'
+    genome_size: 12071326
+
+  mouse_small:
+    reference: mm10
+    variants: mouse_genomes_project
+    genome_size: "61431566"
+    region: "19"
+    chromosomes: "19"
+    simulation_chromosomes: "19"
+
+  mouse_whole_genome:
+    reference: mm10
+    variants: mouse_genomes_project
+    genome_size: "2633776672"
+    region: "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 X"
+    chromosomes: "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 X"
+    simulation_chromosomes: "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19"

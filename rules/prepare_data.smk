@@ -63,7 +63,9 @@ rule prepare_dataset_vcf:
     conda: "../envs/prepare_data.yml"
     shell:
         "bcftools view --regions {params.regions} {input.vcf} {params.only_snps_command} | "
-        "bcftools norm -m-any --check-ref -w -f {input.ref} - > {output}.tmp &&  "
+        "bcftools norm -m-any --check-ref -w -f {input.ref} - | "
+        "bcftools +fill-tags "  # set AF field
+        "> {output}.tmp &&  "
         "python3 scripts/remove_overlapping_indels.py {output}.tmp | "
         "python3 scripts/remove_extra_format_fields_from_vcf.py | "
         "bgzip -c > {output} && tabix -f -p vcf {output} "

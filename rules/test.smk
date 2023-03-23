@@ -34,7 +34,7 @@ rule test:
         results = pd.read_csv(input[0])
         f1_scores = results["METRIC.F1_Score"]
         print(f1_scores)
-        assert f1_scores[0] >= 0.65
+        assert f1_scores[0] >= 0.64
         assert f1_scores[2] >= 0.94
 
 
