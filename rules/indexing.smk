@@ -345,7 +345,7 @@ rule get_variant_kmers:
     resources: mem_gb=400
     threads: config["n_threads_data"]
     params:
-        command = lambda w: "make_unique_variant_kmers" if not config["use_biocy"] else "make_unique_variant_kmers_biocy"
+        command = lambda w: "make_unique_variant_kmers" if not config["use_kivs"] else "make_unique_variant_kmers_kivs"
     shell:
         "graph_kmer_index {params.command} -g {input.graph} -V {input.variant_to_nodes} -k {config[k]} -o {output} -v {input.vcf} "
         " -t {config[n_threads_kmer_index]} -c 4000 --max-variant-nodes 3 -I {input.linear_kmer_index} -p {input.position_id_index} -D True "

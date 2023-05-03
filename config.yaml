@@ -123,4 +123,4 @@ analysis_regions:
 
 
 
-use_biocy: False
+use_kivs: False
