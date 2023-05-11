@@ -123,4 +123,8 @@ analysis_regions:
 
 
 
+max_variant_nodes: 3
 use_kivs: False
+kivs_kmer_index: False
+kivs_minimize_overlaps: False
+kivs_align_windows: False
