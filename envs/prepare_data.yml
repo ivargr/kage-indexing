@@ -1,17 +1,19 @@
 channels:
+  - anaconda
+  - conda-forge
   - bioconda
   - defaults
-  - conda-forge
 dependencies:
+  #- ncurses
+  #- gsl
   - python=3
   - openssl=1.0
   - bcftools
   - tabix
   - samtools=0.1.19
   - perl
-  - ucsc-twobittofa
+  #- ucsc-twobittofa
   - sed
   - bedtools==2.26.0
   - seqtk
   - pigz
-  - samtools

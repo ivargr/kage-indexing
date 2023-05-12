@@ -25,40 +25,11 @@ rule download_reference_genome:
         "data/{genome_build}.fa"
     params:
         command=download_reference_genome_command
-    conda: "../envs/prepare_data.yml"
+    conda: "../envs/twobittofa.yml"
     shell:
         "{params.command}"
 
 
-"""
-def get_ref_genome(wildcards):
-    if config["genomes"][wildcards.genome]["url"].endswith(".2bit"):
-        return f"data/{wildcards.genome}.2bit"
-    else:
-        return
-
-rule convert_reference_genome_to_fasta:
-    input:
-        get_ref_genome
-    output:
-        ref="data/{genome}.fa",
-        fai="data/{genome}.fa.fai"
-    conda: "../envs/prepare_data.yml"
-    shell:
-        "twoBitToFa {input} {output.ref} && samtools faidx {output.ref}"
-"""
-
-"""
-rule convert_reference_to_numeric:
-    input:
-        "data/{genome}.fa"
-    output:
-        ref="data/{genome}_numeric.fa",
-        fai="data/{genome}_numeric.fa.fai"
-    conda: "../envs/prepare_data.yml"
-    shell:
-        "sed 's/chr//g' {input} > {output.ref} && samtools faidx {output.ref}"
-"""
 
 rule make_decoy_fasta:
     output: "data/{dataset}/decoy.fasta"

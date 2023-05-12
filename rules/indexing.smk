@@ -100,7 +100,7 @@ rule make_genotype_txt_matrix:
     threads: 1
     benchmark: "data/{dataset}/benchmarks/make_genotype_txt_matrix_{n_individuals}{subpopulation}.tsv"
     conda:
-        "../envs/prepare_data.yml"
+        "../envs/pigz.yml"
     shell:
         'gunzip -c {input} | grep -v "^#" | cut -f 10- | tr -d "|" | tr -d "/" | tr "\n" "\t" | tr -d "\t" | pigz -c > {output} '
 
