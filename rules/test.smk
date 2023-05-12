@@ -51,6 +51,16 @@ rule test_yeast:
         assert f1_scores[0] >= 0.88
         assert f1_scores[2] >= 0.94
 
+rule test_yeast_full:
+    input:
+        "data/yeast_whole_genome/ref-BKI_simulated_reads_30x.genotyped-truth_BKI.summary.csv"
+    output:
+        touch("test_yeast_whole.txt")
+    run:
+        import pandas as pd
+        results = pd.read_csv(input[0])
+        f1_scores = results["METRIC.F1_Score"]
+        print(f1_scores)
 
 rule run_happy:
     input:

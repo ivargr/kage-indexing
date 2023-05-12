@@ -345,10 +345,14 @@ rule get_variant_kmers:
     resources: mem_gb=400
     threads: config["n_threads_data"]
     params:
-        command = lambda w: "make_unique_variant_kmers" if not config["use_biocy"] else "make_unique_variant_kmers_biocy"
+        command = lambda w: "make_unique_variant_kmers" if not config["use_kivs"] else "make_unique_variant_kmers_kivs",
+	kmer_index = lambda w, input, output: f"-I {input.linear_kmer_index}" if not (config["use_kivs"] and config["kivs_kmer_index"]) else "",
+	minimize_overlaps = lambda w: "--minimize-overlaps" if (config["use_kivs"] and config["kivs_minimize_overlaps"]) else "",
+	align_windows = lambda w: "--align-windows" if (config["use_kivs"] and config["kivs_align_windows"]) else ""
     shell:
         "graph_kmer_index {params.command} -g {input.graph} -V {input.variant_to_nodes} -k {config[k]} -o {output} -v {input.vcf} "
-        " -t {config[n_threads_kmer_index]} -c 4000 --max-variant-nodes 3 -I {input.linear_kmer_index} -p {input.position_id_index} -D True "
+        " -t {config[n_threads_kmer_index]} -c 4000 --max-variant-nodes {config[max_variant_nodes]} "
+	" {params.minimize_overlaps} {params.align_windows} {params.kmer_index} -p {input.position_id_index} -D True "
         #"graph_kmer_index {params.command} -g {input.graph} -V {input.variant_to_nodes} -k {config[k]} -o {output} "
         #" --max-variant-nodes 3 -I {input.linear_kmer_index} "
 
