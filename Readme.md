@@ -1,5 +1,8 @@
 [![Test]( https://github.com/ivargr/kage-indexing/actions/workflows/test.yml/badge.svg)](https://github.com/ivargr/kage-indexing/actions/workflows/test.yml)
 
+
+**NB: This way of making indexes for KAGE is outdated and indexes can now be created much more easily using the `kage index` comman. Please see the main kage repository for instructions.**
+
 # Making indexes for KAGE
 
 This repository contains a snakemake pipeline for making an index that can be used with KAGE. To use this pipeline, you will need:

@@ -12,12 +12,13 @@ rule get_truth_data:
 
 rule run_kage:
     input:
-        index="data/{dataset}/index_25all.npz",
+        index="data/{dataset}/testindex.npz",
         reads="data/{dataset}/{reads}.fa"
     output:
         "data/{dataset}/{reads}.genotyped.vcf"
     shell:
         """
+        #kage genotype -i {input.index} -k 31 -r {input.reads} -b True -B True -i {input.index} -o {output} -t 1
         kage genotype -i {input.index} -k 31 -r {input.reads} -b True -B True -i {input.index} -o {output} -t 1
         """
 
